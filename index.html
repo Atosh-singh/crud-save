@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Locale Storage</title>
+  </head>
+  <body>
+    <form onsubmit="saveToLocalStorage(event)">
+      <label>Name</label><br />
+      <input type="text " name="username" required /><br />
+
+      <label>Email</label><br />
+      <input type="email " name="emailId" required /><br />
+
+      <label> Phone Number</label><br />
+      <input type="tel " name="phoneNumber" /><br />
+      <button>Submit</button>
+    </form>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.2.0/axios.min.js"></script>
+
+    <!--
+   <script>
+      function saveToLocalStorage(event) {
+        event.preventDefault();
+        const name = event.target.username.value;
+        const email = event.target.emailId.value;
+        const phone = event.target.phoneNumber.value;
+
+        localStorage.setItem("name", name);
+        localStorage.setItem("email", email);
+        localStorage.setItem("phone", phone);
+      }
+    </script>
+    -->
+
+    <script>
+      function saveToLocalStorage(event) {
+        event.preventDefault();
+        const name = event.target.username.value;
+        const email = event.target.emailId.value;
+        const phone = event.target.phoneNumber.value;
+
+        //   localStorage.setItem("name", name);
+        //   localStorage.setItem("email", email);
+        //   localStorage.setItem("phone", phone);
+
+        //
+        const obj = {
+          name,
+          email,
+          phone,
+        };
+
+        axios
+          .post(
+            "https:crudcrud.com/api/083b7885c3a8454ca0a194d912369042/appointmentdata",
+            obj
+          )
+          .then((response) => {
+            showNewUserOnScreen(response.data);
+            //  console.log(response);
+          })
+          .catch((err) => {
+            document.body.innerHTML =
+              document.body.innerHTML + "<h4>Something went wrong </h4>";
+            console.log(err);
+          });
+
+        // for storing multiple data at local storage don't use hardcoded key
+        // use unique key like obj.email everbody has different email or phone number
+        //use these
+        //  localStorage.setItem(obj.email, JSON.stringify(obj));
+
+        // get details of user and show them on screen
+        //  showNewUserOnScreen(obj);
+      }
+
+      window.addEventListener("DOMContentLoaded", () => {
+        const localStorageObj = localStorage;
+        const localStoragekeys = Object.keys(localStorageObj);
+
+        for (var i = 0; i < localStoragekeys.length; i++) {
+          const key = localStoragekeys[i];
+          const userDetailsString = localStorageObj[key];
+          const userDetailsObj = JSON.parse(userDetailsString);
+          showNewUserOnScreen(userDetailsObj);
+        }
+      });
+
+      function showNewUserOnScreen(user) {
+        if (localStorage.getItem(user.email) !== null) {
+          removeUserFromScreen(user.email);
+        }
+
+        const parentNode = document.getElementById("listOfUsers");
+        const childHTML = `<li> ${user.name} -${user.email}</li>`;
+
+        parentNode.innerHTML = parentNode.innerHTML + childHTML;
+      }
+
+      // when u are creating a new user
+      // simply check if the mail id exist in local storage or not
+      // if it exists delete him from the screen
+      // then create a new user
+
+      // deleteUser ('abc@gmail.com')
+
+      //   function deleteUser(emailId) {
+      //     console.log(emailId);
+      //     localStorage.removeItem(emailId);
+      //     removeUserFromScreen(emailId);
+      //   }
+
+      //   function removeUserFromScreen(emailId) {
+      //     const parentNode = document.getElementById("listOfUsers");
+      //     const childNodeToBeDeleted = document.getElementById("emaiId");
+      //     if (childNodeToBeDeleted) {
+      //       parentNode.removeChild(childNodeToBeDeleted);
+      //     }
+      //   }
+    </script>
+  </body>
+</html>
+
+<!--
+<script type =text/javascript>
+      let myObj={
+        names: "DOmenic",
+        age:56
+      };
+
+      let myObj_serialized = JSON.stringify(myObj);
+      
+
+      localStorage.setItem('myObj', myObj_serialized)
+    
+
+      let myObj_deserialized = JSON.parse(localStorage.getItem("myObj"))
+    console.log(myObj_deserialized);
+    </script>
+  </body>
+</html>
+
+</html>
+
+-->
